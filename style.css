@@ -1,0 +1,14 @@
+.box{
+    border: 1px solid black;
+    width: 150px;
+    height: 150px;
+    text-align: center;
+    font-size: 50px;
+    cursor: pointer;
+}
+.board{
+    width: 460px;
+    height: 460px;
+    display: flex;
+    flex-wrap: wrap;
+}
