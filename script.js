@@ -1,15 +1,15 @@
+// Player factory function
 const player = (name, marker) => {
-    let pname = name;
-    let pmarker = marker;
-    return { pname, pmarker };
+    return { name, marker };
 };
 
+// Game board module
 const gameBoard = (() => {
-    const board = ["", "", "", "", "", "", "", "", ""];
+    let board = ["", "", "", "", "", "", "", "", ""];
 
-    const getboard = () => board;
+    const getBoard = () => board;
 
-    const updateboard = (marker, index) => {
+    const updateBoard = (marker, index) => {
         if (board[index] === '') {
             board[index] = marker;
         } else {
@@ -17,153 +17,140 @@ const gameBoard = (() => {
         }
     };
 
-    const checkgame = () => {
+    const checkGame = () => {
         // Rows
-        if (board[0] === board[1] && board[1] === board[2] && board[0] !== '') {
-            return true;
-        }
-        if (board[3] === board[4] && board[4] === board[5] && board[3] !== '') {
-            return true;
-        }
-        if (board[6] === board[7] && board[7] === board[8] && board[6] !== '') {
-            return true;
-        }
+        if (board[0] === board[1] && board[1] === board[2] && board[0] !== '') return true;
+        if (board[3] === board[4] && board[4] === board[5] && board[3] !== '') return true;
+        if (board[6] === board[7] && board[7] === board[8] && board[6] !== '') return true;
 
         // Columns
-        if (board[0] === board[3] && board[3] === board[6] && board[0] !== '') {
-            return true;
-        }
-        if (board[1] === board[4] && board[4] === board[7] && board[1] !== '') {
-            return true;
-        }
-        if (board[2] === board[5] && board[5] === board[8] && board[2] !== '') {
-            return true;
-        }
+        if (board[0] === board[3] && board[3] === board[6] && board[0] !== '') return true;
+        if (board[1] === board[4] && board[4] === board[7] && board[1] !== '') return true;
+        if (board[2] === board[5] && board[5] === board[8] && board[2] !== '') return true;
 
         // Diagonals
-        if (board[0] === board[4] && board[4] === board[8] && board[0] !== '') {
-            return true;
-        }
-        if (board[2] === board[4] && board[4] === board[6] && board[2] !== '') {
-            return true;
-        }
-        
-        if (!board.includes('')) {
-        console.log('It\'s a tie!');
-        return false; // Indicate that the game is over due to a tie
-    }
+        if (board[0] === board[4] && board[4] === board[8] && board[0] !== '') return true;
+        if (board[2] === board[4] && board[4] === board[6] && board[2] !== '') return true;
+
         return false;
     };
 
-    return { getboard, updateboard, checkgame };
-})();
-
-const gamecontroller = (() => {
-    const players = [player("player1", "X"), player("player2", "O")];
-    let currentplayer = 0;
-
-    const switchPlayer = () => {
-        currentplayer = currentplayer === 0 ? 1 : 0;
+    const resetBoard = () => {
+        board = ["", "", "", "", "", "", "", "", ""];
     };
 
-    // Destructuring the methods from gameBoard
-    const { updateboard, getboard, checkgame } = gameBoard;
-
-    // Display the current board state
-    console.log(getboard());
-
-    // Example: Player makes a move at index 0
-    updateboard(players[currentplayer].pmarker, 0);
-
-    // Check if the current player has won
-    if (checkgame()) {
-        console.log(players[currentplayer].pname + ' wins!');
-    } else {
-        switchPlayer();
-    }
-
-    // Display the board after the move
-    console.log(getboard());
-
-    // Example: Next player makes a move at index 1
-    updateboard(players[currentplayer].pmarker, 4);
-
-    // Check if the current player has won
-    if (checkgame()) {
-        console.log(players[currentplayer].pname + ' wins!');
-    } else {
-        switchPlayer();
-    }
-
-    // Display the board after the second move
-    console.log(getboard());
-
-    // Example: Next player makes a move at index 2
-    updateboard(players[currentplayer].pmarker, 1);
-
-    // Check if the current player has won
-    if (checkgame()) {
-        console.log(players[currentplayer].pname + ' wins!');
-    } else {
-        switchPlayer();
-    }
-
-    // Display the board after the third move
-    console.log(getboard());
-    
-     updateboard(players[currentplayer].pmarker, 5);
-
-    // Check if the current player has won
-    if (checkgame()) {
-        console.log(players[currentplayer].pname + ' wins!');
-    } else {
-        switchPlayer();
-    }
-
-    // Display the board after the third move
-    console.log(getboard());
-
-     updateboard(players[currentplayer].pmarker, 2);
-
-    // Check if the current player has won
-    if (checkgame()) {
-        console.log(players[currentplayer].pname + ' wins!');
-    } else {
-        switchPlayer();
-    }
-
-    // Display the board after the third move
-    console.log(getboard());
+    return { getBoard, updateBoard, checkGame, resetBoard };
 })();
 
+// Game controller module
+const gameController = (() => {
+    let currentPlayerIndex = 0;
+    let players = [];
 
+    const initPlayers = (p1name, p2name) => {
+        players = [player(p1name, "X"), player(p2name, "O")];
+    };
+
+    const getCurrentPlayer = () => players[currentPlayerIndex];
+
+    const switchPlayer = () => {
+        currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
+    };
+
+    return { initPlayers, getCurrentPlayer, switchPlayer };
+})();
+
+// Event listener for the start button to show the dialog
 document.querySelector('#start').addEventListener('click', () => {
     document.querySelector('.dialog').showModal();
 });
 
+// Event listener for the dialog's start button
 document.querySelector('.game').addEventListener('click', () => {
     document.querySelector('.dialog').close();
 
     const p1name = document.querySelector('#player1').value;
     const p2name = document.querySelector('#player2').value;
 
+    gameController.initPlayers(p1name, p2name);
+
     const main = document.querySelector('.main');
-    main.innerHTML = ''; // Clear the main content
-
-    // Add the player names
-    main.innerHTML = `<h1>${p1name} vs ${p2name}</h1>`;
-
-    // Add the game board
-    main.innerHTML += `
+    main.innerHTML = `<h1>${p1name} vs ${p2name}</h1>
         <div class="board">
-            <div class="box box1" data-value="0"></div>
-            <div class="box box2" data-value="1"></div>
-            <div class="box box3" data-value="2"></div>
-            <div class="box box4" data-value="3"></div>
-            <div class="box box5" data-value="4"></div>
-            <div class="box box6" data-value="5"></div>
-            <div class="box box7" data-value="6"></div>
-            <div class="box box8" data-value="7"></div>
-            <div class="box box9" data-value="8"></div>
+            <div class="box" data-value="0"></div>
+            <div class="box" data-value="1"></div>
+            <div class="box" data-value="2"></div>
+            <div class="box" data-value="3"></div>
+            <div class="box" data-value="4"></div>
+            <div class="box" data-value="5"></div>
+            <div class="box" data-value="6"></div>
+            <div class="box" data-value="7"></div>
+            <div class="box" data-value="8"></div>
         </div>`;
+
+    const boxes = document.querySelectorAll('.box');
+    boxes.forEach(box => {
+        box.addEventListener('click', boxClick);
+    });
 });
+
+// Function to handle box clicks
+function boxClick(event) {
+    const index = event.target.getAttribute('data-value');
+    const marker = gameController.getCurrentPlayer().marker;
+
+    if (gameBoard.getBoard()[index] === '') {
+        gameBoard.updateBoard(marker, index);
+        event.target.textContent = marker;
+
+        if (gameBoard.checkGame()) {
+            showEndDialog(`${gameController.getCurrentPlayer().name} wins!`);
+        } else if (!gameBoard.getBoard().includes('')) {
+            showEndDialog('It\'s a tie!');
+        } else {
+            gameController.switchPlayer();
+        }
+    } else {
+        alert('This space is already taken. Choose another.');
+    }
+}
+
+// Function to show the end game dialog
+function showEndDialog(message) {
+    const dialog = document.querySelector('.dialog2');
+    dialog.querySelector('h1').textContent = message;
+    dialog.showModal();
+}
+
+// Event listener for the replay button
+document.querySelector('.restart').addEventListener('click', () => {
+    document.querySelector('.dialog2').close();
+    resetGame();
+});
+
+// Event listener for the exit button
+document.querySelector('.exit').addEventListener('click', () => {
+    document.querySelector('.dialog2').close();
+    resetToHomePage();
+});
+
+// Function to reset the game
+function resetGame() {
+    gameBoard.resetBoard();
+    document.querySelectorAll('.box').forEach(box => {
+        box.textContent = '';
+    });
+    gameController.switchPlayer();
+}
+
+// Function to reset to the home page
+function resetToHomePage() {
+    resetGame();
+    const main = document.querySelector('.main');
+    main.innerHTML = `<h1>Start the game and enjoy with friends</h1>
+        <button id="start">Start</button>`;
+
+    document.querySelector('#start').addEventListener('click', () => {
+        document.querySelector('.dialog').showModal();
+    });
+}

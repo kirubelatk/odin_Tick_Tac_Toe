@@ -1,3 +1,53 @@
+body{
+    margin: 0px;
+    
+    background-image: url(blob2.svg);
+    background-repeat:no-repeat;
+    background-size: cover;
+}
+.navv{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+
+}
+.logo{
+    color: white;
+    font-size: 40px;
+    margin-left: 40px;
+}
+a{
+    text-decoration: none;
+    color: black
+}
+a:hover{
+    color: #1A67EB;
+}
+.navv ul{
+    list-style-type: none;
+    display: flex;
+    margin-top: 30px;
+    font-size: 20px;
+}
+.navv li{
+    margin-left: 60px;
+}
+.main{
+    text-align: center;
+}
+.moto{
+    font-size: 45px;
+}
+#start{
+    width: 200px;
+    height: 50px;
+    background-color: #1A67EB;
+    color: white;
+    font-size: 35px;
+    font-weight: 600;
+    border: 0px;
+    border-radius: 8px;
+}
+
 .box{
     border: 1px solid black;
     width: 150px;
