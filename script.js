@@ -75,7 +75,8 @@ document.querySelector('.game').addEventListener('click', () => {
     gameController.initPlayers(p1name, p2name);
 
     const main = document.querySelector('.main');
-    main.innerHTML = `<h1>${p1name} vs ${p2name}</h1>
+    main.innerHTML = `<h1 class = 'diatit' >${p1name} vs ${p2name}</h1>
+    <div class = 'par'>
         <div class="board">
             <div class="box" data-value="0"></div>
             <div class="box" data-value="1"></div>
@@ -86,7 +87,10 @@ document.querySelector('.game').addEventListener('click', () => {
             <div class="box" data-value="6"></div>
             <div class="box" data-value="7"></div>
             <div class="box" data-value="8"></div>
-        </div>`;
+        </div>
+    </div>
+
+        `;
 
     const boxes = document.querySelectorAll('.box');
     boxes.forEach(box => {
@@ -102,6 +106,10 @@ function boxClick(event) {
     if (gameBoard.getBoard()[index] === '') {
         gameBoard.updateBoard(marker, index);
         event.target.textContent = marker;
+        event.target.style.color = marker === "X" ? "lightgreen" : "lightblue";
+        event.target.style.textShadow = marker === "X" 
+            ? "0 0 2px green, 0 0 2px green, 0 0 2px green"
+            : "0 0 2px blue, 0 0 2px blue, 0 0 2px blue";
 
         if (gameBoard.checkGame()) {
             showEndDialog(`${gameController.getCurrentPlayer().name} wins!`);
@@ -147,7 +155,9 @@ function resetGame() {
 function resetToHomePage() {
     resetGame();
     const main = document.querySelector('.main');
-    main.innerHTML = `<h1>Start the game and enjoy with friends</h1>
+    main.innerHTML = ` <div class = "moto">
+    <h1>Start the game and enjoy with friends</h1>
+    </div>
         <button id="start">Start</button>`;
 
     document.querySelector('#start').addEventListener('click', () => {
